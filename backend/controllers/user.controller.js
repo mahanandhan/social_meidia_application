@@ -54,3 +54,34 @@ export const getSuggestedUsers = async (req, res) => {
         res.status(500).json({ error: "Internal Server error" });
     }
 }
+
+export const mutualFollowers = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Get your following IDs first
+        const currentUser = await User.findById(userId).select('following');
+        const followingIds = currentUser.following || [];
+
+        // Aggregate friends-of-friends suggestions
+        const suggestions = await User.aggregate([
+            { $match: { _id: { $in: followingIds } } },        // your friends
+            { $unwind: '$following' },                        // each friend’s following
+            { $match: { 
+                following: { $nin: [...followingIds, userId] } // exclude you and users you already follow
+            }},
+            { $group: { _id: '$following' } },                // unique IDs
+            { $limit: 10 }                                   // limit to 10 suggestions
+        ]);
+
+        // Fetch user details for these IDs
+        const suggestedUsers = await User.find({ _id: { $in: suggestions.map(s => s._id) } })
+            .select('-password');
+
+        res.status(200).json(suggestedUsers);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server error" });
+    }
+};

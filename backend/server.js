@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import connectDB from './db/connectDB.js';
 import router from './routes/auth.route.js';
 import userRouter from './routes/user.route.js';
+import postRouter from './routes/post.router.js';
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
 })
 app.use('/api/auth', router);
 app.use('/api/users', userRouter);
+app.use('/api/posts', postRouter)
 
 app.listen(3000, () => {
     connectDB();
