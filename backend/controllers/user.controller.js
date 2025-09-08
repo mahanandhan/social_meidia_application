@@ -41,3 +41,16 @@ export const followUnfollowUser = async (req, res) => {
         res.status(500).json({ error: "Internal Server error" });
     }
 }
+// Developing the algorithem for the suggested users so that when the user follows me and iam following the users then we can get the mutuals
+export const getSuggestedUsers = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const userFollowedByMe = await User.findById(userId).select('following');
+        const users = (await User.find({ _id: { $ne: userId, $nin: userFollowedByMe.following } }).select('-password').limit(10)).slice(0, 4);
+        res.status(200).json(users);
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server error" });
+    }
+}
