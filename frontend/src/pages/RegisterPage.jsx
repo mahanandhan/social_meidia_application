@@ -1,86 +1,157 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegisterPage = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0b0c10] via-[#1f2833] to-[#0b0c10] px-4">
-      <div className="w-full max-w-md bg-[#161b22] border border-gray-700 p-8 rounded-2xl shadow-[0_0_25px_rgba(0,0,0,0.7)]">
-        {/* Logo / Brand */}
-        <div className="flex justify-center mb-6">
-          <div className="h-14 w-14 bg-gradient-to-tr from-[#45a29e] to-[#66fcf1] rounded-full flex items-center justify-center text-black font-bold text-xl shadow-md border border-[#2d3a3a]">
-            ✨
-          </div>
-        </div>
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    image: "",
+    bio: "",
+  });
 
-        {/* Title */}
-        <h2 className="text-3xl font-extrabold text-center text-white mb-2">
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // 🔹 Function to normalize Google Drive links
+  const formatImageLink = (link) => {
+    if (link.includes("drive.google.com")) {
+      const match = link.match(/\/d\/(.*?)\//);
+      if (match && match[1]) {
+        return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+      }
+    }
+    return link; // return as-is for imgur/cloudinary/etc.
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    if (name === "image") {
+      setPreviewUrl(formatImageLink(value));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.username || !formData.email || !formData.password) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await axios.post("http://localhost:3000/api/auth/register", formData, {
+        withCredentials: true,
+      });
+
+      toast.success("Registered successfully!");
+      navigate("/login");
+    } catch (err) {
+      console.error("Registration error:", err);
+      toast.error(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0b0c10] via-[#1f2833] to-[#0b0c10] text-gray-200 px-4">
+      <div className="bg-[#161b22] p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#66fcf1]">
           Create Account
         </h2>
-        <p className="text-center text-gray-400 mb-6">
-          Join <span className="font-semibold text-[#66fcf1]">Socialma</span>{" "}
-          today
-        </p>
 
-        {/* Form */}
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Username */}
           <input
             type="text"
-            placeholder="Full Name"
-            className="w-full px-4 py-3 bg-[#0b0c10] text-gray-200 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#45a29e] transition"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            placeholder="Username"
+            className="w-full px-4 py-2 rounded-xl bg-[#0b0c10] border border-gray-600 focus:ring-2 focus:ring-[#45a29e] outline-none"
+            required
           />
 
+          {/* Email */}
           <input
             type="email"
-            placeholder="Email Address"
-            className="w-full px-4 py-3 bg-[#0b0c10] text-gray-200 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#45a29e] transition"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email"
+            className="w-full px-4 py-2 rounded-xl bg-[#0b0c10] border border-gray-600 focus:ring-2 focus:ring-[#45a29e] outline-none"
+            required
           />
 
+          {/* Password */}
           <input
             type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
             placeholder="Password"
-            className="w-full px-4 py-3 bg-[#0b0c10] text-gray-200 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#45a29e] transition"
+            className="w-full px-4 py-2 rounded-xl bg-[#0b0c10] border border-gray-600 focus:ring-2 focus:ring-[#45a29e] outline-none"
+            required
           />
 
+          {/* Profile Image URL */}
           <input
-            type="password"
-            placeholder="Confirm Password"
-            className="w-full px-4 py-3 bg-[#0b0c10] text-gray-200 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#45a29e] transition"
+            type="text"
+            name="image"
+            value={formData.image}
+            onChange={handleChange}
+            placeholder="Profile Image URL (Google Drive, Imgur, Cloudinary...)"
+            className="w-full px-4 py-2 rounded-xl bg-[#0b0c10] border border-gray-600 focus:ring-2 focus:ring-[#45a29e] outline-none"
           />
 
+          {/* Image Preview */}
+          {previewUrl && (
+            <div className="flex justify-center">
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="w-20 h-20 rounded-full object-cover mt-2 border border-gray-600"
+              />
+            </div>
+          )}
+
+          {/* Bio */}
+          <textarea
+            name="bio"
+            value={formData.bio}
+            onChange={handleChange}
+            placeholder="Write a short bio..."
+            className="w-full px-4 py-2 rounded-xl bg-[#0b0c10] border border-gray-600 focus:ring-2 focus:ring-[#45a29e] outline-none resize-none"
+            rows="3"
+          ></textarea>
+
+          {/* Submit button */}
           <button
             type="submit"
-            className="w-full py-3 bg-gradient-to-r from-[#45a29e] to-[#66fcf1] text-black font-semibold rounded-xl shadow-md hover:from-[#3c8d8a] hover:to-[#45d4cc] transition cursor-pointer"
+            disabled={loading}
+            className="w-full py-2 bg-[#66fcf1] text-black font-semibold rounded-xl hover:bg-[#45a29e] transition"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
-        {/* Extra Links */}
-        <div className="flex justify-between items-center mt-4 text-sm text-gray-400">
-          <span>Already have an account?</span>
-          <a
-            href="/login"
-            className="text-gray-300 font-medium hover:text-[#66fcf1] transition"
-          >
+        <p className="text-center text-sm mt-4 text-gray-400">
+          Already have an account?{" "}
+          <Link to="/login" className="text-[#66fcf1] hover:underline">
             Login
-          </a>
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center my-6">
-          <div className="flex-grow border-t border-gray-700"></div>
-          <span className="px-3 text-gray-500 text-sm">OR</span>
-          <div className="flex-grow border-t border-gray-700"></div>
-        </div>
-
-        {/* Social Register */}
-        <button className="w-full py-3 flex items-center justify-center gap-2 border border-gray-600 rounded-xl hover:bg-[#1f2833] transition text-gray-200">
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="w-5 h-5"
-          />
-          <span className="font-medium">Sign up with Google</span>
-        </button>
+          </Link>
+        </p>
       </div>
     </div>
   );

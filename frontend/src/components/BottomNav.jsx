@@ -16,24 +16,24 @@ const BottomNav = () => {
         <span onClick={() => navigate("/news")} className="text-xs">News</span>
       </button>
       <button className="flex flex-col items-center hover:text-[#66fcf1] transform hover:scale-105 transition duration-200">
-        <Lightbulb size={22} />
-        <span className="text-xs">Projects</span>
+        <Lightbulb onClick={() => navigate("/project")} size={22} />
+        <span onClick={() => navigate('/project')} className="text-xs">Projects</span>
       </button>
       <button className="flex flex-col items-center hover:text-[#66fcf1] transform hover:scale-105 transition duration-200">
         <IoCreateSharp onClick={() => navigate("/post")} size={22}/>
         <span onClick={() => navigate("/post")} className="text-xs">Post</span>
       </button>
       <button className="flex flex-col items-center hover:text-[#66fcf1] transform hover:scale-105 transition duration-200">
-        <HelpCircle size={22} />
-        <span className="text-xs">Ask</span>
+        <HelpCircle onClick={() => navigate('/questions')} size={22} />
+        <span onClick={() => navigate('/questions')} className="text-xs">Ask</span>
       </button>
       <button className="flex flex-col items-center hover:text-[#66fcf1] transform hover:scale-105 transition duration-200">
         <Search onClick={() => navigate("/search")} size={22} />
         <span onClick={() => navigate("/search")} className="text-xs">Search</span>
       </button>
       <button className="flex flex-col items-center hover:text-[#66fcf1] transform hover:scale-105 transition duration-200">
-        <User size={22} />
-        <span className="text-xs">Profile</span>
+        <User onClick={() => navigate("/profile")} size={22} />
+        <span onClick={() => navigate("/profile")} className="text-xs">Profile</span>
       </button>
     </nav>
   );

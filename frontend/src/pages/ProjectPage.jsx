@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./Navbar";
-import PostCard from "./PostCard";
-import BottomNav from "./BottomNav";
+import Navbar from "../components/Navbar";
+import BottomNav from "../components/BottomNav";
+import PostCard from "../components/PostCard";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const FeedPage = () => {
+const ProjectPage = () => {
   const [posts, setPosts] = useState([]);
   const [feedType, setFeedType] = useState("all"); // "all" or "following"
   const [loading, setLoading] = useState(false);
 
+  // Fetch posts from backend
   const fetchPosts = async (type) => {
     setLoading(true);
     try {
@@ -19,13 +20,11 @@ const FeedPage = () => {
           : "http://localhost:3000/api/posts/all";
 
       const res = await axios.get(endpoint, { withCredentials: true });
-      // Map backend data to include a 'commentsArray' field for PostCard
-      const mappedPosts = res.data.map(post => ({
-        ...post,
-        commentsArray: post.comments || [],
-        likes: post.likes || []
-      }));
-      setPosts(mappedPosts);
+
+      // Filter only "project" category posts if backend has categories
+      const projectPosts = res.data.filter(post => post.category === "project");
+
+      setPosts(projectPosts);
     } catch (err) {
       console.error("Error fetching posts:", err);
       toast.error("Failed to fetch posts");
@@ -43,7 +42,7 @@ const FeedPage = () => {
       {/* Navbar */}
       <Navbar />
 
-      {/* Feed type toggle */}
+      {/* Feed Type Toggle */}
       <div className="pt-20 max-w-2xl mx-auto px-4 flex gap-4">
         <button
           onClick={() => setFeedType("all")}
@@ -53,7 +52,7 @@ const FeedPage = () => {
               : "bg-[#161b22] text-gray-300 hover:bg-[#1f2833]"
           }`}
         >
-          All Posts
+          All Projects
         </button>
         <button
           onClick={() => setFeedType("following")}
@@ -67,24 +66,19 @@ const FeedPage = () => {
         </button>
       </div>
 
-      {/* Scrollable Feed */}
+      {/* Scrollable Project Feed */}
       <main className="pb-20 max-w-2xl mx-auto px-4 h-screen overflow-y-auto hide-scrollbar">
         {loading ? (
-          <p className="text-center text-gray-400 mt-10">Loading posts...</p>
+          <p className="text-center text-gray-400 mt-10">Loading projects...</p>
         ) : posts.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">
             {feedType === "following"
-              ? "No posts from people you follow yet."
-              : "No posts available."}
+              ? "No projects from people you follow yet."
+              : "No projects available."}
           </p>
         ) : (
           posts.map((post) => (
-            <PostCard
-              key={post._id}
-              post={post}
-              posts={posts}
-              setPosts={setPosts}
-            />
+            <PostCard key={post._id} post={post} posts={posts} setPosts={setPosts} />
           ))
         )}
       </main>
@@ -95,4 +89,4 @@ const FeedPage = () => {
   );
 };
 
-export default FeedPage;
+export default ProjectPage;

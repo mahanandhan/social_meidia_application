@@ -2,7 +2,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import {generateTokenAndSetCookie} from "../lib/utils/generateToken.js";
 export const registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, image, bio } = req.body;
     try {
         const userExists = await User.findOne({ username });
         const emailExists = await User.findOne({ email });
@@ -21,7 +21,9 @@ export const registerUser = async (req, res) => {
         const newUser = new User({
             username,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            image,
+            bio
         });
         if (newUser) {
             generateTokenAndSetCookie(newUser._id, res);
