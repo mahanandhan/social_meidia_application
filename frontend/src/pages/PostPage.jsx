@@ -31,7 +31,7 @@ const PostPage = () => {
         link: link || null,
       };
 
-      await axios.post("http://localhost:3000/api/posts/create", payload, {
+      await axios.post("https://social-meidia-application.onrender.com/api/posts/create", payload, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });

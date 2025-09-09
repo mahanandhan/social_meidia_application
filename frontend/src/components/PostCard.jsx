@@ -25,7 +25,7 @@ const PostCard = ({ post, posts, setPosts }) => {
   // Check if user follows post's author
   const checkFollowingStatus = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/auth/me", {
+      const res = await axios.get("https://social-meidia-application.onrender.com/api/auth/me", {
         withCredentials: true,
       });
       if (res.data.following.includes(post.user?._id)) {
@@ -44,7 +44,7 @@ const PostCard = ({ post, posts, setPosts }) => {
   const handleFollowToggle = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/users/follow/${post.user._id}`,
+        `https://social-meidia-application.onrender.com/api/users/follow/${post.user._id}`,
         {},
         { withCredentials: true }
       );
@@ -60,7 +60,7 @@ const PostCard = ({ post, posts, setPosts }) => {
   const handleLike = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/posts/like/${post._id}`,
+        `https://social-meidia-application.onrender.com/api/posts/like/${post._id}`,
         {},
         { withCredentials: true }
       );
@@ -90,7 +90,7 @@ const PostCard = ({ post, posts, setPosts }) => {
 
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/posts/comment/${post._id}`,
+        `https://social-meidia-application.onrender.com/api/posts/comment/${post._id}`,
         { text: newComment },
         { withCredentials: true }
       );

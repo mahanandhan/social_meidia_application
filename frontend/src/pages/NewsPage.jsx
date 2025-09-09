@@ -12,7 +12,7 @@ const NewsPage = () => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:3000/api/posts/all", {
+      const res = await axios.get("https://social-meidia-application.onrender.com/api/posts/all", {
         withCredentials: true,
       });
 

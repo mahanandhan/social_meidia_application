@@ -50,7 +50,7 @@ const RegisterPage = () => {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:3000/api/auth/register", formData, {
+      await axios.post("https://social-meidia-application.onrender.com/api/auth/register", formData, {
         withCredentials: true,
       });
 

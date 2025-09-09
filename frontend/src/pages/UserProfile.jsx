@@ -24,7 +24,7 @@ const UserProfile = () => {
 
       // Check if current user is following
       const currentUserRes = await axios.get(
-        "http://localhost:3000/api/auth/me",
+        "https://social-meidia-application.onrender.com/api/auth/me",
         { withCredentials: true }
       );
       const isFollowing = currentUserRes.data.following.includes(res.data._id);
@@ -32,7 +32,7 @@ const UserProfile = () => {
 
       // Fetch user posts
       const postsRes = await axios.get(
-        `http://localhost:3000/api/posts/user/${username}`,
+        `https://social-meidia-application.onrender.com/api/posts/user/${username}`,
         { withCredentials: true }
       );
 
@@ -54,7 +54,7 @@ const UserProfile = () => {
   const handleFollowToggle = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/users/follow/${user._id}`,
+        `https://social-meidia-application.onrender.com/api/users/follow/${user._id}`,
         {},
         { withCredentials: true }
       );

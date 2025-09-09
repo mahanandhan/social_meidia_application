@@ -33,7 +33,7 @@ const ProfilePage = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/posts/user/${username}`,
+        `https://social-meidia-application.onrender.com/api/posts/user/${username}`,
         { withCredentials: true }
       );
 
@@ -57,7 +57,7 @@ const ProfilePage = () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/posts/${postId}`, {
+      await axios.delete(`https://social-meidia-application.onrender.com/api/posts/${postId}`, {
         withCredentials: true,
       });
       setPosts(posts.filter((p) => p._id !== postId));
@@ -82,7 +82,7 @@ const ProfilePage = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/api/auth/logout",
+        "https://social-meidia-application.onrender.com/api/auth/logout",
         {},
         { withCredentials: true }
       );

@@ -16,8 +16,8 @@ const QuestionPage = () => {
     try {
       const endpoint =
         type === "following"
-          ? "http://localhost:3000/api/posts/following"
-          : "http://localhost:3000/api/posts/all";
+          ? "https://social-meidia-application.onrender.com/api/posts/following"
+          : "https://social-meidia-application.onrender.com/api/posts/all";
 
       const res = await axios.get(endpoint, { withCredentials: true });
 
