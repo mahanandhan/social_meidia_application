@@ -22,7 +22,7 @@ const QuestionPage = () => {
       const res = await axios.get(endpoint, { withCredentials: true });
 
       // Filter only "question" category posts
-      const questionPosts = res.data.filter(post => post.category === "question");
+      const questionPosts = res.data.filter(post => post.category === "questions");
 
       setPosts(questionPosts);
     } catch (err) {
