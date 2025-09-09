@@ -17,7 +17,7 @@ const UserProfile = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        `http://localhost:3000/api/users/profile/${username}`,
+        `https://social-meidia-application.onrender.com/api/users/profile/${username}`,
         { withCredentials: true }
       );
       setUser(res.data);
