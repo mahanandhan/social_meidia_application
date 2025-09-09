@@ -17,7 +17,7 @@ const ProfilePage = () => {
   // Fetch logged-in user info
   const fetchUser = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/auth/me", {
+      const res = await axios.get("https://social-meidia-application.onrender.com/api/auth/me", {
         withCredentials: true,
       });
       setUser(res.data);
