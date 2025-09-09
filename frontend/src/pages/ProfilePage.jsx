@@ -87,7 +87,7 @@ const ProfilePage = () => {
         { withCredentials: true }
       );
       toast.success("Logged out successfully");
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       console.error(err);
       toast.error("Logout failed");

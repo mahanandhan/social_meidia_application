@@ -37,7 +37,7 @@ const PostPage = () => {
       });
 
       toast.success("Post created successfully!");
-      navigate("/");
+      navigate("/main");
     } catch (err) {
       console.error("Error creating post:", err);
       toast.error(err.response?.data?.error || "Failed to create post");
